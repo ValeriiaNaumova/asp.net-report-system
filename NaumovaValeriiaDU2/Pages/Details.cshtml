@@ -1,0 +1,32 @@
+﻿@page
+@model NaumovaValeriiaDU2.DetailsModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+
+<div>
+    <h4>Request's Count</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            
+            <h3>@Model.Request.Count()</h3>
+        </dt>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Request.First().Id">Reply</a> |
+    <a asp-page="./MainPage">Back to List</a>
+</div>
+</body>
+</html>

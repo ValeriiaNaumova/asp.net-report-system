@@ -1,0 +1,54 @@
+﻿@page
+@model NaumovaValeriiaDU2.IndexModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <table class="table">
+
+        @foreach (var item in Model.Request)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.response.Id)
+            </td>
+            <td>
+                <button type="submit" asp-page-handler="OnPostDownloadFile" style="width:75px" class="cancel">
+                    Download
+                </button>
+            </td>
+
+        </tr>
+        }
+        </tbody>
+    <div>
+        <a asp-page="./Details">To Details</a>
+        <a href="https://localhost:44307/Index">JS Page</a>
+    </div>
+    </table>
+</body>
+</html>

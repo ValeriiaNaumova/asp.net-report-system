@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Create new Request</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />
+
+
+    <script type="text/javascript">
+        async function GetCategory() {
+            await fetch("/api/Categories", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            }).then(res => {
+                return res.json()
+            }).then(data => _displayItemsSelectCategories(data))
+        }
+
+        function removeOptions(selectElement) {
+       var i, L = selectElement.options.length - 1;
+       for(i = L; i >= 0; i--) {
+          selectElement.remove(i);
+       }
+    }
+
+
+        function _displayItemsSelectCategories(data) {
+            const sel = document.getElementById("select");
+            
+            for(var item in data) {
+                sel.add(new Option(data[item].nameOfCategory, data[item].categoryId));
+                GetProductsByCategoryId(data[item].categoryId);
+            };
+        }
+        async function GetProductsByCategoryId(id) {
+            await fetch("/api/products/GetProductsByCategoryId/" + id, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            }).then(res => {
+                return res.json()
+            }).then(data => {
+                const sel1 = document.getElementById("select1");
+                removeOptions(sel1);
+                for (var item in data) {
+                    sel1.add(new Option(data[item].nameOfProduct));
+                }
+            });
+            
+        }
+
+        function getBase64(file) {
+           var reader = new FileReader();
+           reader.readAsDataURL(file);
+           reader.onload = function () {
+             console.log(reader.result);
+           };
+           reader.onerror = function (error) {
+             console.log('Error: ', error);
+           };
+}
+
+        async function CreateMessage() {
+            await fetch("/api/messages/", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    Category: document.getElementById('select').options[document.getElementById('select').selectedIndex].value,
+                    Product: document.getElementById('select1').options[document.getElementById('select1').selectedIndex].value,
+                    Date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                    Text: document.getElementById('text'),
+                    Email: document.getElementById('email'),
+                    File: getBase64(document.getElementById('file').files[0])
+                })
+            })
+        }
+
+        
+
+    </script>
+</head>
+<body onload="GetCategory()">
+    <div id="root"></div>
+    <div>
+        <select id="select" name="category"  onchange="GetProductsByCategoryId(this.value)">Select category</select>
+    </div>
+    <div>
+        <select id="select1" name="product" >Select product</select>
+    </div>
+
+    <form name="RequestForm">
+        <input type="hidden" name="id" value="0" />
+        <div class="form-group col-md-5">
+            <label for="email">Email:</label>
+            <input class="form-control" name="email" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="text">Text:</label>
+            <input class="form-control" name="text" type="text" />
+        </div>
+        <div>
+            <input type="file" id="file" name="file">
+        </div>
+        <div class="panel-body">
+            <button type="submit" id="submit" onclick="CreateMessage()" class="btn btn-primary">Sent</button>
+        </div>
+    </form>
+
+</body>
+</html>
+
